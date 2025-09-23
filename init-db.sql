@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS authors (
 
 CREATE TABLE IF NOT EXISTS books (
   book_id SERIAL PRIMARY KEY,
-  author_id INTEGER NOT NULL REFERENCES authors(author_id),
+  author_id INTEGER NOT NULL REFERENCES authors(author_id) ON DELETE CASCADE,
   avg_rating NUMERIC(2,1), 
   name VARCHAR(100) NOT NULL,
   created_at DATE,

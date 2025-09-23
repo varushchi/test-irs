@@ -1,30 +1,19 @@
 import express from "express";
+import { getAllAuthors, getAuthor, createAuthor, changeAuthor, deleteAuthor, getAuthorBooks } from "../controllers/authorControllers.js";
 
 const authorRouter = express.Router();
 
-authorRouter.get("/", () => {
-  // TODO: return all authors
-});
+authorRouter.get("/", getAllAuthors)
 
-authorRouter.get("/:id", () => {
-  // TODO: return a single author by its author_id
-});
+authorRouter.get("/:id", getAuthor)
 
-authorRouter.post("/", () => {
-  // TODO: add a new author to the database
-});
+authorRouter.post("/", createAuthor)
 
-authorRouter.put("/:id", () => {
-  // TODO: update author details by author_id
-});
+authorRouter.put("/:id", changeAuthor)
 
-authorRouter.delete("/:id", () => {
-  // TODO: remove a author from the database by author_id
-});
+authorRouter.delete("/:id", deleteAuthor)
 
-authorRouter.get("/:id/books", () => {
-  // TODO: return all books for the author with the given name
-});
+authorRouter.get("/:id/books", getAuthorBooks)
 
 export default authorRouter;
 
