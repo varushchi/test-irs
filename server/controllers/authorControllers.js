@@ -1,10 +1,10 @@
-import { Author, sequelize } from "../models/index.js";
+import { Author, Book, sequelize } from "../models/index.js";
 import { QueryTypes } from "sequelize";
 
 export async function getAllAuthors(req, res) {
   try {
     const authors = await Author.findAll({
-      attributes: ['author_id', 'name', 'royalties', 'birth_date', 'awards_count']
+      attributes: ['author_id', 'name', 'royalties', [sequelize.fn('TO_CHAR', sequelize.col('birth_date'), 'DD.MM.YYYY'), 'birth_date'], 'awards_count']
     });
     res.json(authors)
   } catch (error) {
@@ -81,6 +81,51 @@ export async function getAuthorBooks(req, res) {
       }
     )
     res.json(books)
+  } catch (error) {
+    res.status(500).json({ error: `Internal error ${error}` })
+  }
+}
+
+export async function getAuthorsBooks(req, res) {
+  try {
+    const limit = parseInt(req.query.limit) || 50
+    const offset = parseInt(req.query.offset) || 0
+
+    const total = await Book.count()
+
+    const authors = await Author.findAll({
+      attributes: ['author_id', 'name', 'royalties', [sequelize.fn('TO_CHAR', sequelize.col('birth_date'), 'DD.MM.YYYY'), 'birth_date'], 'awards_count'],
+      include: [
+        {
+          model: Book,
+          attributes: [
+            'book_id',
+            'name',
+            'avg_rating',
+            'page_count',
+            [sequelize.fn('TO_CHAR', sequelize.col('created_at'), 'DD.MM.YYYY'), 'created_at']
+          ]
+        }
+      ],
+      limit,
+      offset
+    });
+    res.json({ rows: authors, total })
+  } catch (error) {
+    res.status(500).json({ error: `Internal error ${error}` })
+  }
+}
+
+export async function getAuthorByName(req, res) {
+  try {
+    const { name } = req.params
+    const author = await Author.findOne({
+      where: { name }
+    })
+    if (!author) {
+      return res.status(404).json({ error: "Author not found" })
+    }
+    res.json(author)
   } catch (error) {
     res.status(500).json({ error: `Internal error ${error}` })
   }

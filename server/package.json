@@ -6,12 +6,14 @@
   "type": "module",
   "scripts": {
     "init-db": "node init-db.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "npm run init-db && npm run dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "pg": "^8.16.3",

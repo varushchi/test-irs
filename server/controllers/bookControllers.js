@@ -1,7 +1,14 @@
-import { Author, Book } from "../models/index.js";
+import { Author, Book, sequelize } from "../models/index.js";
 export async function getAllBooks(req, res) {
   try {
     const books = await Book.findAll({
+      attributes: [
+        'book_id',
+        'name',
+        'avg_rating',
+        'page_count',
+        [sequelize.fn('TO_CHAR', sequelize.col('created_at'), 'DD.MM.YYYY'), 'created_at']
+      ],
       include: Author
     });
     res.json(books)

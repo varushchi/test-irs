@@ -7,7 +7,7 @@ try {
   await sequelize.authenticate();
   console.log("Connected to DB");
 
-  const sql = fs.readFileSync("../init-db.sql", "utf-8")
+  const sql = fs.readFileSync("init-db.sql", "utf-8")
 
   const query = await sequelize.query(sql)
 

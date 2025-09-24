@@ -13,6 +13,28 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  server:
+    build: ./server
+    container_name: my-server
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env 
+    depends_on:
+      - db
+    volumes:
+      - ./init-db.sql:/server/init-db.sql
+
+  client:
+    build: ./client
+    container_name: my-client
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
 volumes:
   db:
 
